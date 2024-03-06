@@ -1,5 +1,4 @@
 lazypredict
-scikit-learn
 pandas
 numpy 
 streamlit
