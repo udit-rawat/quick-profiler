@@ -1,7 +1,7 @@
+import pandas as pd
+import streamlit as st
 from model import predictor
 from sklearn.model_selection import train_test_split
-import streamlit as st
-import pandas as pd
 
 
 def main():
@@ -16,14 +16,15 @@ def main():
     try:
         if uploaded_file is not None:
             if uploaded_file.name.endswith('.csv'):
-                # Read the dataset
-                df = pd.read_csv(uploaded_file)
 
-                # Implement limiter to restrict dataset size
-                if len(df) > 10000:
-                    st.warning(
-                        "The uploaded dataset contains more than 10,000 rows. Only the first 10,000 rows will be used.")
-                    df = df.head(10000)
+                chunk_size = 10000
+                chunks = []
+                for chunk in pd.read_csv(uploaded_file, chunksize=chunk_size):
+                    chunks.append(chunk)
+
+                df = pd.concat(chunks)
+
+                df = df.sample(n=10000, random_state=42)
 
                 st.markdown("---")
                 view_data = st.selectbox(
@@ -34,11 +35,10 @@ def main():
                     st.write(df)
 
                 elif view_data == "No":
-                    pass  # Do nothing if "No" is selected
+                    pass
 
                 st.markdown("---")
 
-                # Auto-detect the type of data based on dtype of target variable
                 target, labels = select_variables(df.columns.tolist(), df)
                 if target:
                     if df[target].dtype in ['object', 'int']:
@@ -47,9 +47,8 @@ def main():
                     else:
                         class_choice = "Regression"
 
-                    # Add a button to initiate the predictor
                     if st.button("Run"):
-                        # Show a progress bar while the model is being trained
+
                         progress_bar = st.progress(0)
                         for percent_complete in range(100):
                             progress_bar.progress(percent_complete + 1)
