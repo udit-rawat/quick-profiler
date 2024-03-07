@@ -1,4 +1,4 @@
-from lazypredict.Supervised import LazyClassifier, LazyRegressor
+from Supervised import LazyClassifier, LazyRegressor
 import pandas as pd
 
 
