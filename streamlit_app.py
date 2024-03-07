@@ -85,14 +85,14 @@ def main():
         width: 100%;
         background-color: #f05941;
         color: white;
-        text-align: right;
+        text-align: left; /* Adjusted to left-align the content */
         padding: 10px;
         display: flex;
-        justify-content: flex-end;
+        justify-content: flex-start; /* Adjusted to start from left */
     }
     .footer img {
         border: none;
-        margin-right: 10px;
+        margin-left: 10px; /* Adjusted margin to the left */
     }
     </style>
     <div class="footer">
